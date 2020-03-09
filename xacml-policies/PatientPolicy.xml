@@ -1,0 +1,377 @@
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"  PolicyId="PatientPolicy" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
+   <Target>
+      <AnyOf>
+         <AllOf>
+            <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^(http|https)?://((([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])|(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5]))((:[\d]+){0,})(/mw-app)?/patients((/)|(\?))?.*$</AttributeValue>
+               <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+            </Match>
+         </AllOf>
+      </AnyOf>
+   </Target>
+<Rule Effect="Permit" RuleId="patient-weight-read-write">
+                <Description>Allows to read patient exercise data  only to the members of 'nurse', 'physician', 'sysadmin' and 'patient' groups</Description>
+                <Target>
+                        <AnyOf>
+                                <AllOf>
+                                        <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                                                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">[\d]+/weights</AttributeValue>
+                                                <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                                        </Match>
+                                        <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                                                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET|POST|DELETE</AttributeValue>
+                                                <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                                        </Match>
+                                </AllOf>
+                        </AnyOf>
+                </Target>
+                <Condition>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+                                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+										<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+                                </Apply>
+                                <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                        </Apply>
+                </Condition>
+        </Rule>
+   <Rule Effect="Permit" RuleId="patient-exercises-read-write">
+                <Description>Allows to read patient exercise data  only to the members of 'nurse', 'physician', 'sysadmin' and 'patient' groups</Description>
+                <Target>
+                        <AnyOf>
+                                <AllOf>
+                                        <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                                                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">[\d]+/exercises</AttributeValue>
+                                                <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                                        </Match>
+                                        <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET|POST|DELETE</AttributeValue>
+                                                <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                                        </Match>
+                                </AllOf>
+                        </AnyOf>
+                </Target>
+                <Condition>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+                                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+										<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+                                </Apply>
+                                <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                        </Apply>
+                </Condition>
+        </Rule>
+	<Rule Effect="Permit" RuleId="lab-data-services">
+		<Description>Allows access to the 'Lab Data', 'Lab Data Count' and 'Get Lab Group Names' only to the members of 'nurse', 'physician', 'sysadmin' and 'patient' groups</Description>
+		<Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/[\d]+/lab</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+				</Apply>
+				<AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+			</Apply>
+		</Condition>
+	</Rule>
+	<Rule Effect="Permit" RuleId="radiology-services">
+		<Description>Allows access to the 'Radiology List' and 'Radiology List Count' only to the members of 'nurse', 'physician', 'sysadmin' and 'patient' groups</Description>
+		<Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/[\d]+/radiology</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+				</Apply>
+				<AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+			</Apply>
+		</Condition>
+	</Rule>
+	<Rule Effect="Permit" RuleId="patient-files-services">
+		<Description>Allows access to the 'Get Patient Files', 'Get Patient Files COUNT' and 'Get Binary Patient File' only to the members of 'nurse', 'physician', 'sysadmin' and 'patient' groups</Description>
+		<Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/[\d]+/files</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+				</Apply>
+				<AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+			</Apply>
+		</Condition>
+	</Rule>
+	<Rule Effect="Permit" RuleId="patient-pdf-services">
+		<Description>Allows access to the 'Generata Data Patient PDF' only to the members of 'nurse', 'physician', 'sysadmin' and 'patient' groups</Description>
+		<Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/[\d]+/pdf/generate</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+						<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+				</Apply>
+				<AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+			</Apply>
+		</Condition>
+	</Rule>
+   <Rule Effect="Permit" RuleId="patient-detail-read">
+   		<Description>Allows access to the 'Patient Details', 'Patient Details FHIR', 'Patient Count By Admit Date' and 'Get Patient Overview' to all groups</Description>
+      <Target>
+         <AnyOf>
+            <AllOf>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/[\d]+((/)|(/fhir)|(/overview)|(/countbyadmitdate))?$</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+            </AllOf>
+         </AnyOf>
+      </Target>
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">financial</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">administrative</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+            </Apply>
+            <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+         </Apply>
+      </Condition>
+   </Rule>
+   <Rule Effect="Permit" RuleId="patient-multiple-read">
+                <Description>Allows access to the 'Patient Details', 'Patient Details FHIR', 'Patient Count By Admit Date' and 'Get Patient Overview' to all groups</Description>
+      <Target>
+         <AnyOf>
+            <AllOf>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/multiple</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+            </AllOf>
+         </AnyOf>
+      </Target>
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">financial</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">administrative</AttributeValue>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+            </Apply>
+            <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+         </Apply>
+      </Condition>
+   </Rule>
+   <Rule Effect="Permit" RuleId="patient-list">
+   		<Description>Allows access to the 'Patient List', '/patients/byrooms', '/patients/countbyname', '/patients/files-templates' and '/patients/files-companies' to all groups</Description>
+      <Target>
+         <AnyOf>
+            <AllOf>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients((/)|(/byrooms)|(/ofdoctor)|(/byrooms/count)|(/countbyname)|(/files-templates)|(/files-companies))?$</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+            </AllOf>
+         </AnyOf>
+      </Target>
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">financial</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">administrative</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+            </Apply>
+            <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+         </Apply>
+      </Condition>
+   </Rule>
+   <Rule Effect="Permit" RuleId="patient-list">
+                <Description>Allows access to the 'Patient List', '/patients/byrooms', '/patients/countbyname', '/patients/files-templates' and '/patients/files-companies' to all groups</Description>
+      <Target>
+         <AnyOf>
+            <AllOf>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/ofdoctor?$</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+            </AllOf>
+         </AnyOf>
+      </Target>
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+            </Apply>
+            <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+         </Apply>
+      </Condition>
+   </Rule>
+ <Rule Effect="Permit" RuleId="Rule-vcard">
+ 		<Description>Allows access to the 'VCard Contact Patient' to all groups</Description>
+      <Target>
+         <AnyOf>
+            <AllOf>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/vcard/[\d]+</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+		<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+            </AllOf>
+         </AnyOf>
+      </Target>
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">administrative</AttributeValue>
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">financial</AttributeValue>
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+			   <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+			   <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+            </Apply>
+            <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+         </Apply>
+      </Condition>
+   </Rule>
+   <Rule Effect="Permit" RuleId="patient-next-of-list-read">
+   		<Description>Allows access to the 'Next of Kin List' and 'Next of Kin Contact' to all groups</Description>
+      <Target>
+         <AnyOf>
+            <AllOf>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/[\d]+/noks</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+            </AllOf>
+            <AllOf>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/patients/noks/[\d]+</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+               <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                  <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+               </Match>
+            </AllOf>           
+         </AnyOf>
+      </Target>
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">nurse</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">physician</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">financial</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">administrative</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">sysadmin</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">trustedpartneradmin</AttributeValue>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">patient</AttributeValue>
+            </Apply>
+            <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+         </Apply>
+      </Condition>
+   </Rule>
+   <Rule Effect="Deny" RuleId="Deny-Rule"></Rule>
+</Policy>        
+
